@@ -56,6 +56,13 @@ details{border-bottom:1px solid var(--bd);padding:12px 0}summary{cursor:pointer;
 .st{display:flex;gap:10px;padding:6px 0;align-items:center}.dot{width:26px;height:26px;border-radius:50%;background:var(--li);color:var(--pr);display:grid;place-items:center;font-size:12px;flex:none}.dot.d{background:#16a06a;color:#fff}.dot.c{background:var(--pr);color:#fff}
 .tag{background:var(--li);color:var(--pr);border-radius:20px;padding:1px 10px;font-size:11px}
 #ts{position:absolute;bottom:80px;inset-inline:18px;background:var(--nv);color:#fff;border-radius:12px;padding:10px 14px;text-align:center;opacity:0;transition:.3s;pointer-events:none;z-index:9}#ts.on{opacity:1}
+
+/* Responsive layouts */
+#pg{min-width:0;overscroll-behavior:contain}.c{min-width:0}.c:has(table){overflow-x:auto}table{min-width:340px}
+@media(max-width:370px){#pg{padding-inline:12px}.qk{gap:4px}.qk a{font-size:10px}.it{gap:8px}.it .btn{white-space:nowrap}.otp{gap:4px}.otp input{width:40px}}
+@media(min-width:600px){body{padding:20px}#app{width:100%;max-width:760px;max-height:none;height:calc(100dvh - 40px);border-radius:24px}#pg{padding:28px 36px 36px}#nv{padding:10px 14px}#nv a{font-size:13px}.qk{gap:16px}.qk i{height:74px}.hero{padding:36px}.hero h1{font-size:40px}.hero svg{max-width:420px;margin:auto}.hero .btn{max-width:360px}.hero p.ctr{max-width:360px}#pg[data-page=signup]>.ctr,#pg[data-page=login]>.ctr,#pg[data-page=otp]>.ctr,#pg[data-page=onboard]>.ctr{max-width:480px;margin:0 auto}.dr{padding:32px 40px}}
+@media(min-width:1024px){#app{max-width:1120px}#pg{padding:36px 56px 44px}#pg[data-page=landing] .hero{padding:52px 72px}#pg[data-page=landing] .hero h1{font-size:48px}#pg[data-page=landing] .hero p{max-width:550px}.qk i{height:84px}.bn{padding:24px}#nv{justify-content:center}#nv a{max-width:180px}.dr{padding-inline:64px}}
+@media(max-height:500px) and (orientation:landscape){body{padding:0}#app{height:100dvh;border-radius:0}#nv{padding:3px}#nv a span{font-size:16px}#nv .pl{width:38px;height:38px;margin-top:0}}
 </style></head><body>
 <div id="app"><div id="pg"></div><div id="nv"></div><div id="ts"></div></div>
 <script>
@@ -129,7 +136,7 @@ if(String(($('#ph').value||'').replace(/[^\d۰-۹]/g,'')).length<10)return toast
 go(w=='signup'?'otp':'dash');if(w=='login')S.in=1}
 function addP(){const id=Date.now();S.projects.push({id,name:$('#n').value||'پروژه جدید',type:S.type,city:$('#c').value,area:num($('#a').value)||100,floors:num($('#f').value)||1,stage:0,pct:5,struct:'سازه بتنی'});S.cur=id;S.tab=0;toast('پروژه ایجاد شد ✓');go('project')}
 function nextSt(){const p=cur();if(p.stage<7){p.stage++;p.pct=Math.min(100,p.pct+10);toast('مرحله تکمیل شد ✓')}else toast('پروژه تمام شده است 🎉');R(1)}
-function R(keep){save();const h=(location.hash||'#landing').slice(1);const r=h.startsWith('cp')?P.cp(+h.slice(2)):(P[h]||P.landing)();const pg=$('#pg'),y=keep?pg.scrollTop:0;
+function R(keep){save();const h=(location.hash||'#landing').slice(1);const r=h.startsWith('cp')?P.cp(+h.slice(2)):(P[h]||P.landing)();const pg=$('#pg'),y=keep?pg.scrollTop:0;pg.dataset.page=h;
 pg.innerHTML=r.h;pg.style.padding=r.full?(r.dark?'0':'0'):'';if(r.full&&!r.dark&&h!='landing'){pg.style.padding='16px 18px'}
 const nv=$('#nv');nv.style.display=r.n==null?'none':'flex';
 if(r.n!=null)nv.innerHTML=`<a onclick="go('dash')" class="${r.n==0?'on':''}"><span>🏠</span>خانه</a><a onclick="go('prices')" class="${r.n==1?'on':''}"><span>🧱</span>مصالح</a><a class="pl" onclick="go('new')">+</a><a onclick="go('contractors')" class="${r.n==3?'on':''}"><span>👷</span>پیمانکاران</a><a onclick="go('profile')" class="${r.n==4?'on':''}"><span>👤</span>پروفایل</a>`;
