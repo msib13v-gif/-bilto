@@ -76,7 +76,7 @@ details{border-bottom:1px solid var(--bd);padding:12px 0}summary{cursor:pointer;
 #nv a:nth-child(2) .nav-icon{color:#a84125}#nv a:nth-child(2) .nav-icon rect{fill:#f0a47e}
 #nv a:nth-child(4) .nav-icon{color:#765037}
 @media(min-width:900px){#app{display:flex;flex-direction:column}#app .workspace-sidebar{display:none}#nv[style*="display: flex"]{display:flex!important;flex:none;justify-content:center;gap:min(4vw,48px);padding:10px 20px calc(10px + env(safe-area-inset-bottom,0px))}#nv a{max-width:160px}#ts{bottom:90px;right:30px;left:30px}}
-</style></head><body>
+</style><link rel="stylesheet" href="bilto-landing.css"></head><body>
 <div id="app"><aside class="workspace-sidebar" id="sidebar"></aside><div id="pg"></div><div id="nv"></div><div id="ts"></div></div>
 <script>
 const $=s=>document.querySelector(s),fa=n=>Math.round(n).toLocaleString('fa-IR'),num=s=>+String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))||0;
@@ -215,4 +215,4 @@ const contractorIcon=nv.querySelector("a[onclick=\"go('contractors')\"] .nav-ico
 if(h==='prices')setupMaterialCategories();pg.scrollTop=y}
 function setupMaterialCategories(){const strip=$('#pg[data-page=prices] .chips');if(!strip)return;let startX=0,startScroll=0,pressed=false,dragged=false;strip.addEventListener('pointerdown',event=>{if(event.pointerType!=='mouse'||event.button!==0)return;pressed=true;dragged=false;startX=event.clientX;startScroll=strip.scrollLeft});strip.addEventListener('pointermove',event=>{if(!pressed)return;const distance=event.clientX-startX;if(!dragged&&Math.abs(distance)>5){dragged=true;strip.classList.add('dragging');strip.setPointerCapture(event.pointerId)}if(dragged){strip.scrollLeft=startScroll-distance;event.preventDefault()}});const finish=()=>{pressed=false;strip.classList.remove('dragging')};strip.addEventListener('pointerup',finish);strip.addEventListener('pointercancel',finish);strip.addEventListener('lostpointercapture',finish);strip.addEventListener('click',event=>{if(dragged){event.preventDefault();event.stopImmediatePropagation();dragged=false}},true)}
 addEventListener('hashchange',()=>R());addEventListener('pagehide',save);
-</script><script src="bilto-updates.js"></script><script>R();</script></body></html>
+</script><script src="bilto-updates.js"></script><script src="bilto-landing.js"></script><script>R();</script></body></html>
