@@ -70,7 +70,5 @@ const originalProfile=P.profile;
 P.profile=()=>{const page=originalProfile();page.h=page.h.replace('طرح‌های اشتراک','اشتراک من');return page};
 const originalSubscription=P.subscription;
 P.subscription=()=>{const page=originalSubscription();page.h=page.h.replace('طرح‌های اشتراک','اشتراک من');if(!S.subscriptionDemo?.plan)page.h=page.h.replace('<div class="c">','<div class="c"><b>شما اشتراکی ندارید</b></div><div class="c">');return page};
-const originalDash=P.dash;
-P.dash=()=>{const page=originalDash();if(!S.subscriptionDemo?.plan)page.h=page.h.replace('<div class="demo-note">','<div class="demo-note">شما اشتراکی ندارید. <a onclick="go(\'subscription\')">اشتراک من</a></div><div class="demo-note">');return page};
 const originalAnswerMaterialQuestion=answerMaterialQuestion;
 answerMaterialQuestion=function(){originalAnswerMaterialQuestion();const first=M[Number(S.compareFirst)],second=M[Number(S.compareSecond)],question=S.compareQuestion||'';if(first?.[3]==='سیمان'&&[first,second].every(item=>cementInfo[item?.[0]])){if(/سولفات/.test(question)&&/شدید|زیاد|بالا/.test(question)&&[first[0],second[0]].includes('سیمان پرتلند نوع ۵'))S.compareReply='برای مواجهه شدید با سولفات، نوع ۵ گزینه مناسب‌تری برای بررسی است. انتخاب نهایی به آزمایش خاک و آب و تأیید طراح نیاز دارد.';else if(/مقاومت اولیه|زودرس|سریع|زود/.test(question)&&[first[0],second[0]].includes('سیمان پرتلند نوع ۳'))S.compareReply='برای کسب مقاومت اولیه سریع، نوع ۳ گزینه مناسب‌تری برای بررسی است. طرح اختلاط باید توسط متخصص تأیید شود.';R()}};
