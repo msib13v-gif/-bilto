@@ -16,3 +16,61 @@ function startLandingSignup(event){
   if(!name||phone.replace(/[^\d۰-۹]/g,'').length<10)return toast('نام و شماره موبایل معتبر وارد کنید');
   S.user={...(S.user||{}),fullName:name,phone};save();go('otp');
 }
+
+const landingWithSignupForm = P.landing;
+P.landing = () => {
+  const page = landingWithSignupForm();
+  page.h = page.h.replace(/<form class="bl-form bl-signup"[\s\S]*?<\/form>/, '<button class="bl-button bl-start-button" type="button" onclick="go(\'signup\')">شروع</button>')
+    .replace(/<div class="bl-actions bl-portals">[\s\S]*?<\/div>/, '')
+    .replace(/<p class="bl-lead">[\s\S]*?<\/p>/, '')
+    .replace(' 🏗️✨', '');
+  return page;
+};
+P.signup = () => {
+  let form = landingWithSignupForm().h.match(/<form class="bl-form bl-signup"[\s\S]*?<\/form>/)[0]
+    .replace('name="name"', `name="name" value="${esc(S.signupEditingPhone ? fullName() : '')}"`);
+  S.signupEditingPhone = false;
+  const portals = landingWithSignupForm().h.match(/<div class="bl-actions bl-portals">[\s\S]*?<\/div>/)[0];
+  return { full: 1, h: `<div class="bl bl-signup-page" dir="rtl"><div class="bl-wrap bl-signup-content"><h1 class="bl-signup-slogan">از زمین تا خانه،<br><span>با خیال راحت بساز!</span></h1>${form}${portals}</div></div>` };
+};
+const otpWithEditLink = P.otp;
+const signupSlogan = '<h1 class="bl-signup-slogan">از زمین تا خانه،<br><span>با خیال راحت بساز!</span></h1>';
+P.otp = () => {
+  const page = otpWithEditLink();
+  page.h = page.h.replace("onclick=\"go('signup')\"", 'onclick="editSignupPhone()"').replace('<div class="ctr">', `<div class="ctr">${signupSlogan}`);
+  return page;
+};
+const onboardWithoutSlogan = P.onboard;
+P.onboard = () => {
+  const page = onboardWithoutSlogan();
+  page.h = page.h.replace('<div class="ctr">', `<div class="ctr">${signupSlogan}`);
+  return page;
+};
+function editSignupPhone(){
+  S.signupEditingPhone = true;
+  go('signup');
+}
+const profileWithoutLogoutDialog = P.profile;
+P.profile = () => {
+  const page = profileWithoutLogoutDialog();
+  page.h = page.h.replace("onclick=\"S.in=0;go('landing')\"", 'onclick="showLogoutConfirmation()"');
+  return page;
+};
+function showLogoutConfirmation(){
+  let dialog = document.getElementById('logout-confirmation');
+  if (!dialog) {
+    dialog = document.createElement('dialog');
+    dialog.id = 'logout-confirmation';
+    dialog.className = 'logout-dialog';
+    dialog.setAttribute('aria-labelledby', 'logout-question');
+    dialog.innerHTML = '<h2 id="logout-question">مطمئنی که می‌خواهی خارج شوی؟</h2><div class="logout-actions"><button type="button" class="logout-cancel" onclick="document.getElementById(\'logout-confirmation\').close()" autofocus>نه</button><button type="button" class="logout-confirm" onclick="confirmLogout()">بله</button></div>';
+    document.body.appendChild(dialog);
+  }
+  dialog.showModal();
+}
+function confirmLogout(){
+  document.getElementById('logout-confirmation').close();
+  S.in = 0;
+  save();
+  go('landing');
+}

@@ -105,6 +105,13 @@ body[data-page=landing] .global-nav-logo, body[data-page=dash] .global-nav-logo 
 body { -webkit-user-select: none; user-select: none; }
 input, textarea, [contenteditable="true"] { caret-color: transparent; -webkit-user-select: text; user-select: text; }
 @media (min-width: 600px) { .global-nav .menu-trigger { display: none; } }
+@media (max-width: 599px) {
+  body[data-nav=none] .global-nav { display: flex; }
+  body[data-nav=none] .global-nav .home-button { display: none; }
+  .global-nav .menu-trigger { position: fixed; left: max(16px, env(safe-area-inset-left)); top: calc(max(14px, env(safe-area-inset-top)) + 11px); }
+  .menu-panel { left: auto; right: 0; transform: translateX(105%); }
+  .menu-open .menu-panel { transform: translateX(0); }
+}
 @media (min-width: 900px) { #nv[style*="display: flex"] { justify-content: space-between; gap: 0; padding-inline: clamp(40px, 6vw, 96px); } #nv a { flex: 0 0 90px; } }
 </style>
 </head><body>
@@ -221,7 +228,7 @@ const baseCompareItems=P.compareitems;
 P.compareitems=()=>{const page=baseCompareItems();if(!S.compareResult)return page;const first=M[Number(S.compareFirst)],second=M[Number(S.compareSecond)];if(!first||!second)return page;const details=[first,second].map(material=>{const info=materialInfo(material);return `<div class="c"><h3>${esc(material[0])}</h3><p><b>تعریف:</b> ${esc(info.definition)}</p><p><b>مزیت:</b> ${esc(info.advantage)}</p><p><b>محدودیت:</b> ${esc(info.limitation)}</p><p><b>کاربرد:</b> ${esc(info.use)}</p></div>`}).join('');const chat=`<section class="c"><h3>برای چه کاری مصالح می‌خواهید؟</h3><p class="mu">کاربرد را بنویسید. این راهنمای آزمایشی فقط چند حالت مشخص برای سیمان را بررسی می‌کند و گفت‌وگوی هوشمند یا جایگزین نظر متخصص نیست.</p>${S.compareReply?`<div class="res"><b>کاربرد شما:</b> ${esc(S.compareQuestion||'')}<p>${esc(S.compareReply)}</p></div>`:''}<label for="material-question">توضیح کاربرد</label><textarea class="in" id="material-question" maxlength="1000" rows="3" placeholder="مثلاً بتن در خاک با سولفات شدید"></textarea><button class="btn" onclick="answerMaterialQuestion()">بررسی کاربرد</button></section><p class="mu">اطلاعات تیپ‌های سیمان بر اساس طبقه‌بندی ASTM C150 است؛ شرایط محلی و مشخصات کالا باید با متخصص بررسی شوند. مرجع طبقه‌بندی: ASTM C150؛ مشخصات باید برای محصول و پروژه تأیید شوند.</p>`;const position=page.h.lastIndexOf('<button class="btn o"');page.h=position<0?page.h+details+chat:page.h.slice(0,position)+details+chat+page.h.slice(position);return page};
 function answerMaterialQuestion(){const input=$('#material-question').value.trim();if(!input)return toast('کاربرد مصالح را بنویسید');const first=M[Number(S.compareFirst)],second=M[Number(S.compareSecond)],names=[first?.[0],second?.[0]];S.compareQuestion=input;S.compareReply='برای این کاربرد و این دو کالا اطلاعات تأییدشده کافی ندارم؛ مشخصات فنی، شرایط پروژه و نظر متخصص لازم است و نمی‌توان گزینه بهتر را تعیین کرد.';if(first?.[3]==='سیمان'&&names.every(name=>cementInfo[name])){if(/سولفات/.test(input)&&/شدید|زیاد|بالا/.test(input)&&names.includes('سیمان تیپ ۵'))S.compareReply='برای مواجهه شدید با سولفات، تیپ ۵ از نظر مقاومت سولفاتی گزینه مناسب‌تری برای بررسی است. انتخاب نهایی به آزمایش خاک و آب، مشخصات بتن و تأیید طراح نیاز دارد.';else if(/مقاومت اولیه|زودرس|سریع|زود/.test(input)&&names.includes('سیمان تیپ ۳'))S.compareReply='اگر نیاز اصلی کسب مقاومت اولیه سریع باشد، تیپ ۳ گزینه مناسب‌تری برای بررسی است. زمان قالب‌برداری و طرح اختلاط باید توسط متخصص تأیید شود.';else S.compareReply='کاربرد را دقیق‌تر توضیح دهید؛ مثلاً شدت سولفات یا نیاز به مقاومت اولیه سریع را مشخص کنید. بدون این اطلاعات نمی‌توان یکی را بهتر دانست.'}R()}
 function chk(w){
-if(w==='otp'){S.in=1;return go('onboard')}
+if(w==='otp'){S.in=1;S.user={...(S.user||{}),registered:true};return go('onboard')}
 const phone=($('#ph').value||'').trim();
 if(String(phone.replace(/[^\d۰-۹]/g,'')).length<10)return toast('شماره موبایل را وارد کنید (نمایشی)');
 if(w==='signup'){const name=$('#full-name').value.trim();if(!name)return toast('نام و نام خانوادگی خود را وارد کنید');S.user={fullName:name,phone};save();return go('otp')}
